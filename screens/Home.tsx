@@ -4,12 +4,17 @@ import { StyleSheet, Button } from 'react-native';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import {signOut} from '../actions';
-import { useDispatch } from 'react-redux';
+import {signOut, getAccountDataByUser} from '../actions';
+import { useDispatch, useSelector } from 'react-redux';
 
-export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function Home({ navigation }: RootTabScreenProps<'TabOne'>) {
 
   const dispatch = useDispatch();
+  const reducer = useSelector(state => state.reducer);
+
+  React.useEffect(() => {
+    dispatch(getAccountDataByUser(reducer.user.user_id));
+  },[]);
 
   const _signOut = () => {
     dispatch(signOut());
@@ -17,9 +22,9 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
+      <Text style={styles.title}>Hola {reducer.user.username}!</Text>
+      <Text style={styles.subtitle}>Tenés {reducer.user_account.balance } BTC</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
       <Button
           onPress={_signOut}
           title="Cerrar Sesión"
@@ -38,6 +43,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#841584'
   },
   separator: {
     marginVertical: 30,

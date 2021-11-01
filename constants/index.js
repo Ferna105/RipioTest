@@ -1,2 +1,4 @@
 export const SIGN_IN = 'SIGN_IN'
 export const SIGN_OUT = 'SIGN_OUT'
+export const SET_USER_ACCOUNT = 'SET_USER_ACCOUNT'
+export const SET_USER_ACCOUNT_HISTORY = 'SET_USER_ACCOUNT_HISTORY'

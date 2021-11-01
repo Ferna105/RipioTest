@@ -81,14 +81,14 @@ export const transfer = (from_address, to_address, amount) => {
 
           tx.executeSql('select * from accounts where address = ?', [from_address], (trans, result) => {
             currentFromBalance = result.rows._array[0].balance;
-            console.warn(currentFromBalance);
+            var newFromBalance = parseFloat(currentFromBalance) - parseFloat(amount);
+
+            tx.executeSql('update accounts set balance = ? where address = ?', [newFromBalance,from_address], (trans, result) => {
+              console.warn(result.insertId);
+            }, (error) => console.warn(error));
+
           }, (error) => console.warn(error));
 
-          var newFromBalance = parseFloat(currentFromBalance) - parseFloat(amount);
-          console.warn(currentFromBalance);
-          tx.executeSql('update accounts set balance = ? where address = ?', [500,from_address], (trans, result) => {
-            console.warn(currentBalance);
-          }, (error) => console.warn(error));
         }
       );
     });

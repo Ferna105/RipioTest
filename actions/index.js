@@ -63,7 +63,12 @@ export const getAccountDataHistory = (account_id) => {
     openDatabase().then(db => {
       db.transaction(
         tx => {
-          tx.executeSql('select * from accounts_history where account_from_id = ? or account_to_id = ?', [account_id, account_id], (trans, result) => {
+          tx.executeSql(`
+            SELECT ah.history_id, ah.created_datetime, ah.amount, af.address as from_address, at.address as to_address, ah.status
+            FROM accounts_history ah 
+            INNER JOIN accounts af on ah.account_from_id = af.account_id
+            INNER JOIN accounts at on ah.account_to_id = at.account_id
+            WHERE ah.account_from_id = ? or ah.account_to_id = ?`, [account_id, account_id], (trans, result) => {
             dispatch({type: SET_USER_ACCOUNT_HISTORY, history: result.rows._array})
           }, (error) => console.warn(error));
         }
@@ -72,7 +77,7 @@ export const getAccountDataHistory = (account_id) => {
   }
 }
 
-export const transfer = (from_address, to_address, amount) => {
+export const transfer = (from_address, to_address, amount, fee) => {
   return dispatch => {
     openDatabase().then(db => {
       db.transaction(

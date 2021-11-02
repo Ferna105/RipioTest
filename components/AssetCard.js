@@ -1,4 +1,5 @@
-import {View, Text, Image, TouchableOpacity, Alert} from 'react-native';
+import React from 'react';
+import {StyleSheet, View, Text, Image, TouchableOpacity, Alert} from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { useSelector } from 'react-redux';
 
@@ -28,3 +29,43 @@ export default AssetCard = () => {
         </View>
     )
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      margin: 20,
+      justifyContent: 'center',
+    },
+    card: {
+      marginVertical: 10,
+      backgroundColor: '#f9f9f9',
+      padding: 10,
+      borderRadius: 10,
+    },
+    scrollView: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    subtitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#841584'
+    },
+    text: {
+      fontSize: 15,
+      fontWeight: 'bold',
+      color: '#841584'
+    },
+    separator: {
+      marginVertical: 30,
+      height: 1,
+      width: '80%',
+    },
+  });
+  

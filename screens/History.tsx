@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { StyleSheet, Image, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Alert, Text, TouchableOpacity } from 'react-native';
 
-import { Text } from '../components/Themed';
+import AssetCard from '../components/AssetCard';
 import { getAccountDataHistory } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Clipboard from 'expo-clipboard';
@@ -20,41 +20,32 @@ export default function History({ navigation }) {
     Alert.alert("Copiado", "La dirección fue copiada al portapapeles");
   };
 
+  const showDetails = (row) => {
+    if (row.from_address == reducer.user_account.address) {
+      Alert.alert('Detalle', `Envío de ${row.amount} BTC a:\n\n${row.to_address}\n\nEstado: ${row.status}`);
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
-          <View>
-            <Text style={styles.subtitle}>{reducer.user_account.balance} BTC</Text>
-            <Text style={styles.text}>({reducer.user_account.balance * reducer.ars_cotizations.sell} ARS)</Text>
-          </View>
-          <Image style={{ width: 50, height: 50 }} source={require('../assets/images/btc.png')} />
-        </View>
-        <TouchableOpacity activeOpacity={.5} onPress={copyToClipboard} >
-          <>
-            <Text style={styles.text}>Dirección:</Text>
-            <Text style={styles.subtitle} >{reducer.user_account.address}</Text>
-          </>
-        </TouchableOpacity>
-      </View>
+      <AssetCard />
       <View>
         <Text style={styles.title}>Balance</Text>
         <View>
           <View style={styles.header}>
-            <Text style={{flex: 1}}>ID</Text>
-            <Text style={{flex: 1}}>Tipo</Text>
-            <Text style={{flex: 3}}>Fecha y Hora</Text>
-            <Text style={{flex: 1}}>Monto</Text>
+            <Text style={[styles.text,{flex: 1}]}>ID</Text>
+            <Text style={[styles.text,{flex: 2}]}>Tipo</Text>
+            <Text style={[styles.text,{flex: 2}]}>Fecha y Hora</Text>
+            <Text style={[styles.text,{flex: 1}]}>Monto</Text>
           </View>
           { reducer.user_account_history.length > 0 && reducer.user_account_history.map((row, key) => {
-            console.warn(row)
             return (
-              <View key={key} style={styles.row}>
-                <Text style={{flex: 1}}>{row.history_id}</Text>
-                <Text style={{flex: 1}}>Envío</Text>
-                <Text style={{flex: 3}}>{row.created_datetime}</Text>
-                <Text style={{flex: 1}}>{row.amount}</Text>
-              </View>
+              <TouchableOpacity onPress={() => showDetails(row)} key={key} style={styles.row}>
+                <Text style={[styles.text,{flex: 1}]}>{row.history_id}</Text>
+                <Text style={[styles.text,{flex: 2}]}>{row.from_address == reducer.user_account.address ? "Envío" : "Recepción"}</Text>
+                <Text style={[styles.text,{flex: 2}]}>{row.created_datetime}</Text>
+                <Text style={[styles.text,{flex: 1}]}>{row.amount}</Text>
+              </TouchableOpacity>
             )
           })}
         </View>
@@ -79,10 +70,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#841584'
+    color: 'white'
   },
   title: {
     fontSize: 20,
+    color: 'white',
     fontWeight: 'bold',
   },
   subtitle: {

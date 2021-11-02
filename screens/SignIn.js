@@ -1,9 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { Platform, StyleSheet, TextInput, Button, Image, Alert } from 'react-native';
+import {  StyleSheet, TextInput, Button, Image, Alert, Text, View } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
 import {signIn} from '../actions';
 import { useDispatch } from 'react-redux';
 

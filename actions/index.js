@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT, SET_USER_ACCOUNT, SET_USER_ACCOUNT_HISTORY } from '../constants';
+import { SIGN_IN, SIGN_OUT, SET_USER_ACCOUNT, SET_USER_ACCOUNT_HISTORY, SET_ARS_COTIZATIONS } from '../constants';
 
 import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
@@ -92,5 +92,13 @@ export const transfer = (from_address, to_address, amount) => {
         }
       );
     });
+  }
+}
+
+export const getCotizations = () => {
+  return dispatch => {
+    fetch("https://ripio.com/api/v1/rates/")
+      .then(jsonResponse => jsonResponse.json())
+      .then(response => dispatch({type: SET_ARS_COTIZATIONS, sell: response.rates.ARS_SELL, buy: response.rates.ARS_BUY}));
   }
 }

@@ -8,6 +8,7 @@ export const openDatabase = async () => {
     if (!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite')).exists) {
       await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'SQLite');
     }
+
     await FileSystem.downloadAsync(
       Asset.fromModule(require("../assets/sqlite.db")).uri,
       FileSystem.documentDirectory + 'SQLite/myDatabaseName.db'
@@ -24,6 +25,7 @@ export const signIn = (username, password) => {
         tx => {
           tx.executeSql('select * from users where username = ? and password = ?', [username,password], (trans, result) => {
             if(result.rows.length >= 1){
+              db._db.close();
               dispatch({type: SIGN_IN, user: result.rows._array[0]})
             } else {
               alert('Usuario y/o contraseña incorrectos.')
@@ -47,6 +49,7 @@ export const getAccountDataByUser = (user_id) => {
         tx => {
           tx.executeSql('select * from accounts where user_id = ?', [user_id], (trans, result) => {
             if(result.rows.length >= 1){
+              db._db.close();
               dispatch({type: SET_USER_ACCOUNT, account: result.rows._array[0]})
             } else {
               alert('El usuario no tiene cuenta de Crypto.')
@@ -69,6 +72,8 @@ export const getAccountDataHistory = (account_id) => {
             INNER JOIN accounts af on ah.account_from_id = af.account_id
             INNER JOIN accounts at on ah.account_to_id = at.account_id
             WHERE ah.account_from_id = ? or ah.account_to_id = ?`, [account_id, account_id], (trans, result) => {
+              db._db.close();
+
             dispatch({type: SET_USER_ACCOUNT_HISTORY, history: result.rows._array})
           }, (error) => console.warn(error));
         }
@@ -82,15 +87,21 @@ export const transfer = (from_address, to_address, amount, fee) => {
     openDatabase().then(db => {
       db.transaction(
         tx => {
+          
           var currentFromBalance;
+
 
           tx.executeSql('select * from accounts where address = ?', [from_address], (trans, result) => {
             currentFromBalance = result.rows._array[0].balance;
-            var newFromBalance = parseFloat(currentFromBalance) - parseFloat(amount);
+            var newFromBalance = parseFloat(currentFromBalance) - parseFloat(amount) - parseFloat(fee);
 
             tx.executeSql('update accounts set balance = ? where address = ?', [newFromBalance,from_address], (trans, result) => {
-              console.warn(result.insertId);
-            }, (error) => console.warn(error));
+              console.warn(result);
+            }, (_,error) => console.warn(error));
+
+            tx.executeSql('insert into accounts_history values (?, ?, ?, ?, ?, ?', [2,from_address,to_address,'1222',amount,'SUCCESS'], (trans, result) => {
+              console.warn(result);
+            }, (_,error) => console.warn(error));
 
           }, (error) => console.warn(error));
 

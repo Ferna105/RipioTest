@@ -9,8 +9,8 @@ export default function Transfer({ navigation }) {
 
     const dispatch = useDispatch();
     const reducer = useSelector(state => state.reducer);
-    const [amount,setAmount] = React.useState('1');
-    const [address,setAddress] = React.useState('GNASDSNKALNDSAJDJS');
+    const [amount,setAmount] = React.useState('');
+    const [address,setAddress] = React.useState('');
     const [fee,setFee] = React.useState('');
     const [networkFeeSuccess,setNetworkFeeSuccess] = React.useState(false);
 

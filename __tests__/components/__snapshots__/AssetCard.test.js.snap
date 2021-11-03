@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#f9f9f9",
+      "borderRadius": 10,
+      "marginVertical": 10,
+      "padding": 10,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+      }
+    }
+  >
+    <View>
+      <Text
+        style={
+          Object {
+            "color": "#841584",
+            "fontSize": 18,
+            "fontWeight": "bold",
+          }
+        }
+      >
+         BTC
+      </Text>
+      <Text
+        style={
+          Object {
+            "color": "#841584",
+            "fontSize": 15,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        (
+        NaN
+         ARS)
+      </Text>
+    </View>
+    <Image
+      source={1}
+      style={
+        Object {
+          "height": 50,
+          "width": 50,
+        }
+      }
+    />
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#841584",
+          "fontSize": 15,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      Dirección:
+    </Text>
+    <Text
+      style={
+        Object {
+          "color": "#841584",
+          "fontSize": 18,
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </View>
+</View>
+`;

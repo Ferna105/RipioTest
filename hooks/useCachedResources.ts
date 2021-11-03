@@ -10,19 +10,15 @@ export default function useCachedResources() {
 
   const createDatabase = async () => {
     if (!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite')).exists) {
-      console.warn('Creating database folder');
       await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'SQLite');
     }
 
     if (!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite/myDatabaseName.db')).exists) {
-      console.warn('Creating database');
       await FileSystem.downloadAsync(
         Asset.fromModule(require("../assets/sqlite.db")).uri,
         FileSystem.documentDirectory + 'SQLite/myDatabaseName.db'
       );
     }
-
-    console.warn('Loaded Database files');
   }
 
 

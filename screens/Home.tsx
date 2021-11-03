@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, Text, ScrollView, RefreshControl, View } from 'react-native';
+import { StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
 
-import { RootTabScreenProps } from '../types';
 import {  getAccountDataByUser, getCotizations } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import AssetCard from '../components/AssetCard';
+import Text from '../components/Text';
 
-export default function Home({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function Home({ navigation }) {
 
   const dispatch = useDispatch();
   const reducer = useSelector(state => state.reducer);
@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
   },

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, Button, Text, View, TextInput, Alert} from 'react-native';
+import { StyleSheet, Button, View, TextInput, Alert} from 'react-native';
 
 import {  transfer } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import AssetCard from '../components/AssetCard';
+import Text from '../components/Text';
 export default function Transfer({ navigation }) {
 
     const dispatch = useDispatch();
@@ -96,7 +97,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'white'
     },
     text: {
         fontSize: 15,

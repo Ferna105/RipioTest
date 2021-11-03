@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, View, Alert, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, Alert, TouchableOpacity, ScrollView } from 'react-native';
 
 import AssetCard from '../components/AssetCard';
+import Text from '../components/Text';
 import { getAccountDataHistory } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
-import * as Clipboard from 'expo-clipboard';
 
 export default function History({ navigation }) {
 
@@ -14,11 +14,6 @@ export default function History({ navigation }) {
   React.useEffect(() => {
     dispatch(getAccountDataHistory(reducer.user_account.account_id));
   }, []);
-
-  const copyToClipboard = () => {
-    Clipboard.setString(reducer.user_account.address);
-    Alert.alert("Copiado", "La dirección fue copiada al portapapeles");
-  };
 
   const showDetails = (row) => {
     if (row.from_address == reducer.user_account.address) {
@@ -36,19 +31,18 @@ export default function History({ navigation }) {
           <Text style={styles.title}>Balance</Text>
           <View>
             <View style={styles.header}>
-              <Text style={[styles.text, { flex: 1 }]}>ID</Text>
-              <Text style={[styles.text, { flex: 2 }]}>Tipo</Text>
-              <Text style={[styles.text, { flex: 2 }]}>Fecha y Hora</Text>
-              <Text style={[styles.text, { flex: 1 }]}>Monto</Text>
+              <Text style={{ flex: 1 }}>ID</Text>
+              <Text style={{ flex: 2 }}>Tipo</Text>
+              <Text style={{ flex: 2 }}>Fecha y Hora</Text>
+              <Text style={{ flex: 1 }}>Monto</Text>
             </View>
             {reducer.user_account_history.length > 0 && reducer.user_account_history.map((row, key) => {
-              console.warn(row)
               return (
                 <TouchableOpacity onPress={() => showDetails(row)} key={key} style={styles.row}>
-                  <Text style={[styles.text, { flex: 1 }]}>{row.history_id}</Text>
-                  <Text style={[styles.text, { flex: 2 }]}>{row.from_address == reducer.user_account.address ? "Envío" : "Recepción"}</Text>
-                  <Text style={[styles.text, { flex: 2 }]}>{row.created_datetime}</Text>
-                  <Text style={[styles.text, { flex: 1 }]}>{row.amount}</Text>
+                  <Text style={{ flex: 1 }}>{row.history_id}</Text>
+                  <Text style={{ flex: 2 }}>{row.from_address == reducer.user_account.address ? "Envío" : "Recepción"}</Text>
+                  <Text style={{ flex: 2 }}>{row.created_datetime}</Text>
+                  <Text style={{ flex: 1 }}>{row.amount}</Text>
                 </TouchableOpacity>
               )
             })}
@@ -75,11 +69,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: 'white'
   },
   title: {
     fontSize: 20,
-    color: 'white',
     fontWeight: 'bold',
   },
   subtitle: {

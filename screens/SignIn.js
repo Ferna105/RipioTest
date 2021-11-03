@@ -28,10 +28,10 @@ export default function SignIn() {
             <Image style={styles.img} source={require('../assets/images/logo.png')} />
             <Text style={styles.title}>Iniciar Sesión</Text>
             <View style={styles.inputWrapper}>
-                <TextInput style={styles.input} placeholder="Usuario" value={username} onChangeText={setUsername} />
+                <TextInput autoCapitalize="none" style={styles.input} placeholder="Usuario" value={username} onChangeText={setUsername} />
             </View>
             <View style={styles.inputWrapper}>
-                <TextInput style={styles.input} placeholder="Contraseña" value={password} onChangeText={setPassword} />
+                <TextInput autoCapitalize="none" secureTextEntry={true} style={styles.input} placeholder="Contraseña" value={password} onChangeText={setPassword} />
             </View>
             <View style={styles.inputWrapper}>
                 <Button

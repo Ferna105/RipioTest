@@ -1,4 +1,5 @@
 import { SIGN_IN, SIGN_OUT, SET_USER_ACCOUNT, SET_USER_ACCOUNT_HISTORY, SET_ARS_COTIZATIONS } from '../constants';
+import { Alert} from 'react-native';
 
 import * as SQLite from 'expo-sqlite';
 
@@ -89,7 +90,7 @@ export const transfer = (from_address, to_address, amount, fee) => {
         }))
 
         if (!toAccount) {
-          alert('La cuenta de destino no existe.')
+          Alert.alert('Error', 'La cuenta de destino no existe.')
         } else {
 
           var totalAmount = parseFloat(amount) + parseFloat(fee);
@@ -125,6 +126,7 @@ export const transfer = (from_address, to_address, amount, fee) => {
               reject
             )
           }));
+          Alert.alert('Éxito', 'El envío fue realizado con éxito.')
 
           dispatch(getAccountDataByUser(fromAccount.user_id));
           dispatch(getAccountDataHistory(fromAccount.account_id));

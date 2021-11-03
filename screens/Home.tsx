@@ -34,7 +34,7 @@ export default function Home({ navigation }) {
     >
       <View style={styles.container}>
         <Text style={styles.title}>Hola {reducer.user.username}!</Text>
-        <Text style={styles.text}>Bienvenido a Ripio Text. Conocé el balance de tu cuenta, tus movimientos y hacé transferencias a otras direcciones.</Text>
+        <Text style={styles.text}>Bienvenido a Ripio Test. Conocé el balance de tu cuenta, tus movimientos y hacé transferencias a otras direcciones.</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
         <Text style={styles.title}>Balance</Text>

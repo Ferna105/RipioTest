@@ -15,11 +15,15 @@ export default function History({ navigation }) {
     dispatch(getAccountDataHistory(reducer.user_account.account_id));
   }, []);
 
+  const showAmount = (row) => {
+    return (row.from_address == reducer.user_account.address ? (row.amount + row.fee) : row.amount);
+  }
+
   const showDetails = (row) => {
     if (row.from_address == reducer.user_account.address) {
-      Alert.alert('Detalle', `Envío de ${row.amount} BTC a:\n\n${row.to_address}\n\nEstado: ${row.status}`);
+      Alert.alert('Detalle', `Envío de ${showAmount(row)} BTC a:\n\n${row.to_address}\n\nEstado: ${row.status}`);
     } else {
-      Alert.alert('Detalle', `Recepción de ${row.amount} BTC de:\n\n${row.from_address}\n\nEstado: ${row.status}`);
+      Alert.alert('Detalle', `Recepción de ${showAmount(row)} BTC de:\n\n${row.from_address}\n\nEstado: ${row.status}`);
     }
   }
 
@@ -42,7 +46,7 @@ export default function History({ navigation }) {
                   <Text style={{ flex: 1 }}>{row.history_id}</Text>
                   <Text style={{ flex: 2 }}>{row.from_address == reducer.user_account.address ? "Envío" : "Recepción"}</Text>
                   <Text style={{ flex: 2 }}>{row.created_datetime}</Text>
-                  <Text style={{ flex: 1 }}>{row.amount}</Text>
+                  <Text style={{ flex: 1 }}>{showAmount(row)}</Text>
                 </TouchableOpacity>
               )
             })}

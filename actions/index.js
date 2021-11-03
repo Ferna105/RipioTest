@@ -16,7 +16,7 @@ export const signIn = (username, password) => {
           if (result.rows.length >= 1) {
             dispatch({ type: SIGN_IN, user: result.rows._array[0] })
           } else {
-            alert('Usuario y/o contraseña incorrectos.')
+            Alert.alert('Error','Usuario y/o contraseña incorrectos.')
           }
         }, (_,error) => console.warn(error));
       }, (errorCalback => console.warn(errorCalback))
@@ -52,11 +52,11 @@ export const getAccountDataHistory = (account_id) => {
     db.transaction(
       tx => {
         tx.executeSql(`
-          SELECT ah.history_id, ah.created_datetime, ah.amount, af.address as from_address, at.address as to_address, ah.status
+          SELECT ah.history_id, ah.created_datetime, ah.amount, af.address as from_address, at.address as to_address, ah.status, ah.fee
           FROM accounts_history ah 
           INNER JOIN accounts af on ah.account_from_id = af.account_id
           INNER JOIN accounts at on ah.account_to_id = at.account_id
-          WHERE ah.account_from_id = ? or ah.account_to_id = ?`, [account_id, account_id], (trans, result) => {
+          WHERE ah.account_from_id = ? or ah.account_to_id = ? order by 1 desc`, [account_id, account_id], (trans, result) => {
           dispatch({ type: SET_USER_ACCOUNT_HISTORY, history: result.rows._array })
         }, (error) => console.warn(error));
       }
@@ -120,8 +120,8 @@ export const transfer = (from_address, to_address, amount, fee) => {
 
           const insertedHistory = await new Promise((resolve, reject) => db.transaction(tx => {
             tx.executeSql(
-              'insert into accounts_history values (?, ?, ?, ?, ?, ?)', 
-              [null, fromAccount.account_id, toAccount.account_id, datetime, totalAmount, 'SUCCESS'], 
+              'insert into accounts_history (history_id,account_from_id,account_to_id,created_datetime,amount,status,fee) values (?, ?, ?, ?, ?, ?, ?)', 
+              [null, fromAccount.account_id, toAccount.account_id, datetime, parseFloat(amount), 'SUCCESS', parseFloat(fee)], 
               (_, { rows }) => resolve(rows._array[0]), 
               reject
             )

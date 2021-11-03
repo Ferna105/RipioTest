@@ -6,8 +6,8 @@ import { useDispatch } from 'react-redux';
 
 export default function SignIn() {
 
-    const [username,setUsername] = React.useState('fernando');
-    const [password,setPassword] = React.useState('fernando');
+    const [username,setUsername] = React.useState('');
+    const [password,setPassword] = React.useState('');
 
     const dispatch = useDispatch()
 
@@ -23,15 +23,33 @@ export default function SignIn() {
         }
     }
 
+    let passwordInput = null;
+
     return (
         <View style={styles.container}>
             <Image style={styles.img} source={require('../assets/images/logo.png')} />
             <Text style={styles.title}>Iniciar Sesión</Text>
             <View style={styles.inputWrapper}>
-                <TextInput autoCapitalize="none" style={styles.input} placeholder="Usuario" value={username} onChangeText={setUsername} />
+                <TextInput 
+                    autoCapitalize="none" 
+                    style={styles.input} 
+                    autoFocus={true} 
+                    placeholder="Usuario" 
+                    value={username} 
+                    onChangeText={setUsername}
+                    onSubmitEditing={(event) => { passwordInput.focus() }}
+                />
             </View>
             <View style={styles.inputWrapper}>
-                <TextInput autoCapitalize="none" secureTextEntry={true} style={styles.input} placeholder="Contraseña" value={password} onChangeText={setPassword} />
+                <TextInput 
+                    ref={(input) => { passwordInput = input }}
+                    autoCapitalize="none" 
+                    secureTextEntry={true} 
+                    style={styles.input} 
+                    placeholder="Contraseña" 
+                    value={password} 
+                    onChangeText={setPassword} 
+                />
             </View>
             <View style={styles.inputWrapper}>
                 <Button

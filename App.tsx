@@ -8,6 +8,7 @@ import Navigation from './navigation';
 
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
+import Splash from './screens/Splash';
 const store = configureStore()
 
 export default function App() {
@@ -15,7 +16,7 @@ export default function App() {
   const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
-    return null;
+    return <Splash />;
   } else {
     return (
       <SafeAreaProvider>

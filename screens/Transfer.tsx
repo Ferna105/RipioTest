@@ -9,9 +9,9 @@ export default function Transfer({ navigation }) {
     const dispatch = useDispatch();
     const reducer = useSelector(state => state.reducer);
     const [amount,setAmount] = React.useState('1');
-    const [address,setAddress] = React.useState('GAHLKSJDALLJGAAAKSDJJAANNSJ3FJ1LXJ');
+    const [address,setAddress] = React.useState('GNASDSNKALNDSAJDJS');
     const [fee,setFee] = React.useState('');
-    const [buttonDisabled,setButtonDisabled] = React.useState(true);
+    const [networkFeeSuccess,setNetworkFeeSuccess] = React.useState(false);
 
     React.useEffect(() => {
         fetch("https://bitcoinfees.earn.com/api/v1/fees/recommended")
@@ -19,12 +19,16 @@ export default function Transfer({ navigation }) {
             .then(response => {
                 //Se usuará la comisión más barata para el ejemplo
                 setFee((response.hourFee / 100000000).toFixed(7))  
-                setButtonDisabled(false)  
+                setNetworkFeeSuccess(true)  
             });
     },[])
 
     const isValidTransfer = () => {
-        return amount && address;
+        return amount && address && address != reducer.user_account.address;
+    }
+
+    const isButtonDisabled = () => {
+        return (!networkFeeSuccess || parseFloat(amount) + parseFloat(fee) > reducer.user_account.balance);
     }
 
     const _transfer = () => {
@@ -45,7 +49,7 @@ export default function Transfer({ navigation }) {
                 }
             );
         } else {
-            Alert.alert('Error', 'El monto y dirección son obligatorios.')
+            Alert.alert('Error', 'El monto y dirección son obligatorios.\n\nLa dirección de destino debe ser distinta de la de origen')
         }
     }
 
@@ -55,7 +59,13 @@ export default function Transfer({ navigation }) {
             <Text style={styles.title}>Transferir BTC</Text>
             <View style={styles.inputWrapper}>
                 <Text style={styles.text}>Monto</Text>
-                <TextInput style={styles.input} placeholder="Monto" value={amount} onChangeText={setAmount} />
+                <TextInput         
+                    keyboardType="numeric"
+                    style={styles.input} 
+                    placeholder="Monto" 
+                    value={amount} 
+                    onChangeText={setAmount} 
+                />
             </View>
             <View style={styles.inputWrapper}>
                 <Text style={styles.text}>Dirección de destino</Text>
@@ -68,7 +78,7 @@ export default function Transfer({ navigation }) {
             <View style={styles.inputWrapper}>
                 <Button
                     onPress={_transfer}
-                    disabled={buttonDisabled}
+                    disabled={isButtonDisabled()}
                     title="Enviar"
                     color="#841584"
                 />

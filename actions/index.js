@@ -46,7 +46,6 @@ export const getAccountDataByUser = (user_id) => {
 }
 
 export const getAccountDataHistory = (account_id) => {
-  console.warn(account_id);
   return dispatch => {
     const db = openDatabase();
     db.transaction(
@@ -68,25 +67,68 @@ export const transfer = (from_address, to_address, amount, fee) => {
   return dispatch => {
     const db = openDatabase();
     db.transaction(
-      tx => {
-        var currentFromBalance;
+      async (tx) => {
+        //Obtengo cuenta origen
+        const fromAccount = await new Promise((resolve, reject) => db.transaction(tx => {
+          tx.executeSql(
+            "select * from accounts where address = ?", 
+            [from_address], 
+            (_, { rows }) => resolve(rows._array[0]), 
+            reject
+            )
+          }))
 
-        tx.executeSql('select * from accounts where address = ?', [from_address], (trans, result) => {
-          currentFromBalance = result.rows._array[0].balance;
+        //Obtengo cuenta destino
+        const toAccount = await new Promise((resolve, reject) => db.transaction(tx => {
+          tx.executeSql(
+            "select * from accounts where address = ?", 
+            [to_address], 
+            (_, { rows }) => resolve(rows._array[0]), 
+            reject
+          )
+        }))
+
+        if (!toAccount) {
+          alert('La cuenta de destino no existe.')
+        } else {
+
           var totalAmount = parseFloat(amount) + parseFloat(fee);
-          var newFromBalance = parseFloat(currentFromBalance) - totalAmount;
+          var newFromBalance = parseFloat(fromAccount.balance) - totalAmount;
+          var newToBalance = parseFloat(toAccount.balance) + parseFloat(amount);
           var datetime = (new Date()).toString();
 
-          tx.executeSql('update accounts set balance = ? where address = ?', [newFromBalance, from_address], (trans, result) => {
-            console.warn(result);
-          }, (_, error) => console.warn(error));
+          //Actualizo balance de cuenta origen
+          const updatedFromAccount = await new Promise((resolve, reject) => db.transaction(tx => {
+            tx.executeSql(
+              'update accounts set balance = ? where account_id = ?', 
+              [newFromBalance, fromAccount.account_id], 
+              (_, {rowsAffected}) => resolve(rowsAffected),
+              reject
+            )
+          }))
 
-          tx.executeSql('insert into accounts_history values (?, ?, ?, ?, ?, ?)', [null, from_address, to_address, datetime, totalAmount, 'SUCCESS'], (trans, result) => {
-            console.warn(result);
-          }, (_, error) => console.warn(error));
+          //Actualizo balance de cuenta origen
+          const updatedToAccount = await new Promise((resolve, reject) => db.transaction(tx => {
+            tx.executeSql(
+              'update accounts set balance = ? where account_id = ?', 
+              [newToBalance, toAccount.account_id], 
+              (_, { rowsAffected }) => resolve(rowsAffected),
+              reject
+            )
+          }))
 
-        }, (error) => console.warn(error));
+          const insertedHistory = await new Promise((resolve, reject) => db.transaction(tx => {
+            tx.executeSql(
+              'insert into accounts_history values (?, ?, ?, ?, ?, ?)', 
+              [null, fromAccount.account_id, toAccount.account_id, datetime, totalAmount, 'SUCCESS'], 
+              (_, { rows }) => resolve(rows._array[0]), 
+              reject
+            )
+          }));
 
+          dispatch(getAccountDataByUser(fromAccount.user_id));
+          dispatch(getAccountDataHistory(fromAccount.account_id));
+        }
       }
     );
   }

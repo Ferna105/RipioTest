@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View, Alert, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Alert, Text, TouchableOpacity, ScrollView } from 'react-native';
 
 import AssetCard from '../components/AssetCard';
 import { getAccountDataHistory } from '../actions';
@@ -23,35 +23,40 @@ export default function History({ navigation }) {
   const showDetails = (row) => {
     if (row.from_address == reducer.user_account.address) {
       Alert.alert('Detalle', `Envío de ${row.amount} BTC a:\n\n${row.to_address}\n\nEstado: ${row.status}`);
+    } else {
+      Alert.alert('Detalle', `Recepción de ${row.amount} BTC de:\n\n${row.from_address}\n\nEstado: ${row.status}`);
     }
   }
 
   return (
-    <View style={styles.container}>
-      <AssetCard />
-      <View>
-        <Text style={styles.title}>Balance</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <AssetCard />
         <View>
-          <View style={styles.header}>
-            <Text style={[styles.text,{flex: 1}]}>ID</Text>
-            <Text style={[styles.text,{flex: 2}]}>Tipo</Text>
-            <Text style={[styles.text,{flex: 2}]}>Fecha y Hora</Text>
-            <Text style={[styles.text,{flex: 1}]}>Monto</Text>
+          <Text style={styles.title}>Balance</Text>
+          <View>
+            <View style={styles.header}>
+              <Text style={[styles.text, { flex: 1 }]}>ID</Text>
+              <Text style={[styles.text, { flex: 2 }]}>Tipo</Text>
+              <Text style={[styles.text, { flex: 2 }]}>Fecha y Hora</Text>
+              <Text style={[styles.text, { flex: 1 }]}>Monto</Text>
+            </View>
+            {reducer.user_account_history.length > 0 && reducer.user_account_history.map((row, key) => {
+              console.warn(row)
+              return (
+                <TouchableOpacity onPress={() => showDetails(row)} key={key} style={styles.row}>
+                  <Text style={[styles.text, { flex: 1 }]}>{row.history_id}</Text>
+                  <Text style={[styles.text, { flex: 2 }]}>{row.from_address == reducer.user_account.address ? "Envío" : "Recepción"}</Text>
+                  <Text style={[styles.text, { flex: 2 }]}>{row.created_datetime}</Text>
+                  <Text style={[styles.text, { flex: 1 }]}>{row.amount}</Text>
+                </TouchableOpacity>
+              )
+            })}
           </View>
-          { reducer.user_account_history.length > 0 && reducer.user_account_history.map((row, key) => {
-            return (
-              <TouchableOpacity onPress={() => showDetails(row)} key={key} style={styles.row}>
-                <Text style={[styles.text,{flex: 1}]}>{row.history_id}</Text>
-                <Text style={[styles.text,{flex: 2}]}>{row.from_address == reducer.user_account.address ? "Envío" : "Recepción"}</Text>
-                <Text style={[styles.text,{flex: 2}]}>{row.created_datetime}</Text>
-                <Text style={[styles.text,{flex: 1}]}>{row.amount}</Text>
-              </TouchableOpacity>
-            )
-          })}
         </View>
+        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       </View>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-    </View>
+    </ScrollView>
   );
 }
 

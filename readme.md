@@ -1,6 +1,8 @@
 Ripio Test
 
-Esta aplicación fue desarrollada como ejercicio práctico para Ripio.
+Esta aplicación fue desarrollada como ejercicio práctico para Ripio. En la carpeta "/artifacts" se encuentran el archivo .apk para android y .tar.gz de la versión 
+de 
+iOS para correr en un simulador.
 
 La aplicación permite simular un envío de BTC de un usuario a otro en el sistema, ver el historial de mis transacciones y el monto expresado en ARS.
 
